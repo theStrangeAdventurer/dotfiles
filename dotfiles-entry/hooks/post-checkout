@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+echo "🔧 Running post-checkout hook..."
+
+# Директория со скриптами
+BIN_DIR="$HOME/.local/bin"
+
+# Проверяем существование директории
+if [ ! -d "$BIN_DIR" ]; then
+    echo "Directory $BIN_DIR does not exist, skipping..."
+    exit 0
+fi
+
+echo "Processing scripts in $BIN_DIR"
+
+# 1. Находим ВСЕ .sh файлы и делаем их исполняемыми
+echo "1. Setting +x for all .sh files..."
+find "$BIN_DIR" -type f -name "*.sh" | while read -r script; do
+    if [ -f "$script" ]; then
+        chmod +x "$script"
+        echo "   ✓ $(basename "$script")"
+    fi
+done
+echo "✅ post-checkout hook completed!"
