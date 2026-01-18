@@ -1,0 +1,29 @@
+# Neovim swap, backup, and undo files
+*.swp
+*.swo
+*.swn
+*.bak
+undo/
+sessions/
+
+# Shared data
+shada/
+
+# Logs
+*.log
+
+# Secret / Local configs
+.env
+.env.*
+*.local.lua
+
+# Packer / Lazy.nvim caches (if you don't want to commit them)
+# lazy-lock.json # Usually committed, uncomment if you want to skip
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary/Fixme files
+*.fixme
+
