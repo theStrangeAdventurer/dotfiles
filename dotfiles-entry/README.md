@@ -17,9 +17,9 @@ dotfiles config --local status.showUntrackedFiles no
 
 ```sh
 dotfiles checkout || {
-  echo "Backing up pre-existing dotfiles to .dotfiles-backup"
-  mkdir -p .dotfiles-backup
-  dotfiles checkout 2>&1 | grep -E "\s+\." | awk {'print $1'} | xargs -I{} mv {} .dotfiles-backup/{}
+  b=.dotfiles-backup; mkdir -p "$b"
+  dotfiles checkout 2>&1 | sed -n 's/^[[:space:]]*\(\.[^[:space:]]*\).*/\1/p' |
+  while IFS= read -r f; do [ -e "$f" ] || continue; mkdir -p "$b/$(dirname "$f")"; mv -- "$f" "$b/$f"; done
   dotfiles checkout
 }
 ```
