@@ -4,7 +4,7 @@
   "height": 30,
 
   "modules-left": ["hyprland/workspaces"],
-  "modules-center": ["clock", "custom/amnezia"],
+  "modules-center": ["hyprland/language", "clock", "custom/amnezia"],
     "modules-right": ["network", "battery", "power-profiles-daemon", "custom/sys-info"],
 
   "hyprland/workspaces": {
@@ -25,6 +25,12 @@
 		"persistent-workspaces": {
 			"*": 6
 		}
+  },
+
+  "hyprland/language": {
+    "format": "{}",
+    "format-en": "EN",
+    "format-ru": "RU"
   },
 
   "clock": {

@@ -35,6 +35,8 @@ window#waybar {
 
 
 
-#clock {
+#clock,
+#language {
 	padding: 0 4px;
 }
+
