@@ -1,0 +1,72 @@
+{
+  "layer": "top",
+  "position": "top",
+  "height": 30,
+
+  "modules-left": ["hyprland/workspaces"],
+  "modules-center": ["clock", "custom/amnezia"],
+    "modules-right": ["network", "battery", "power-profiles-daemon", "custom/sys-info"],
+
+  "hyprland/workspaces": {
+		"format": "{icon}",
+		"format-icons": {
+			"1": "",
+			"2": "",
+			"3": "3",
+			"4": "4",
+			"5": "5",
+			"6": "",
+		},
+		"active-only": false,
+		"on-scroll-up": "hyprctl dispatch workspace e-1",
+		"on-scroll-down": "hyprctl dispatch workspace e+1",
+		"sort-by-number": true,
+		"all-outputs": true,
+		"persistent-workspaces": {
+			"*": 6
+		}
+  },
+
+  "clock": {
+    "format": "{:%H:%M}",
+    "tooltip-format": "{:%A, %d %B %Y}"
+  },
+
+  "network": {
+    "format-wifi": "<span size='18000' rise='-2000'></span> {signalStrength}%",
+    "format-ethernet": "<span size='18000' rise='-2000'>󰈀</span> Connected",
+    "format-disconnected": "<span size='18000' rise='-2000'></span> Offline"
+  },
+
+  "battery": {
+    "format": "<span size='18000' rise='-2000'></span> {capacity}%",
+    "format-charging": "<span size='18000' rise='-2000'></span> {capacity}%",
+    "format-full": "<span size='18000' rise='-2000'></span> {capacity}%"
+  },
+  "custom/amnezia": {
+		"format": " {} ",
+		"return-type": "json",
+		"interval": 10,
+		"exec": "amnezia-status",
+		"on-click": "move-to-amnezia-workspace.sh",
+		"escape": true
+	},
+  "power-profiles-daemon": {
+	  "format": " {icon} ",
+	  "tooltip-format": "Power profile: {profile}\nDriver: {driver}",
+	  "tooltip": true,
+    "format-icons": {
+      "default": "<span size='18000' rise='-2000'></span>",
+      "performance": "<span size='18000' rise='-2000'></span>",
+      "balanced": "<span size='18000' rise='-2000'></span>",
+      "power-saver": "<span size='18000' rise='-2000'></span>"
+    }
+	},
+  "custom/sys-info": {
+    "format": "<span size='18000' rise='-2000'>󰻠</span>",
+    "exec": "~/.config/waybar/sys-info.sh",
+    "return-type": "json",
+    "interval": 5
+  },
+}
+

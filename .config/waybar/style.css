@@ -1,0 +1,40 @@
+* {
+	font-family: "CaskaydiaCove Nerd Font Mono", monospace;
+	font-size: 13px;
+}
+
+window#waybar {
+	padding: 0;
+	background: linear-gradient(119deg, rgba(4, 93, 107, 0.56) 0%, rgba(7, 23, 41, 0.43) 100%);
+	color: #cdd6f4;
+	-webkit-backdrop-filter: blur(10px);
+}
+
+#workspaces button {
+	padding: 2px;
+	color: #fff;
+}
+
+#workspaces button.active {
+	background-color: #3AABC2;
+	color: #1e1e2e;
+}
+
+#battery,
+#power-profiles-daemon,
+#network,
+#custom-sys-info,
+#battery label,
+#power-profiles-daemon label,
+#network label,
+#custom-sys-info label {
+	padding: 0 6px;
+	font-size: 14px;
+}
+
+
+
+
+#clock {
+	padding: 0 4px;
+}
