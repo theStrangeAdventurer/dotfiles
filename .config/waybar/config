@@ -33,9 +33,12 @@
   },
 
   "network": {
+    "interface": "wlan0",
     "format-wifi": "<span size='18000' rise='-2000'></span> {signalStrength}%",
     "format-ethernet": "<span size='18000' rise='-2000'>󰈀</span> Connected",
-    "format-disconnected": "<span size='18000' rise='-2000'></span> Offline"
+    "format-disconnected": "<span size='18000' rise='-2000'></span> Offline",
+    "tooltip-format": "{essid} {signalStrength}%",
+    "on-click": "alacritty -e sh -c \"echo '=== ШПАРГАЛКА IWD ==='; echo '1. device list            - список адаптеров'; echo '2. station wlan0 scan     - поиск сетей'; echo '3. station wlan0 get-networks - список сетей'; echo '4. station wlan0 connect SSID - подключение'; echo '======================'; echo ''; iwctl\""
   },
 
   "battery": {
