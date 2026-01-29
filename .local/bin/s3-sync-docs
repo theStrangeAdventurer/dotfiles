@@ -1,0 +1,24 @@
+#!/bin/bash
+set -e
+
+folders=("courses" "books" "3d-models")
+bucket="s3://private-vault-data"
+
+for folder in "${folders[@]}"; do
+    local_path="$HOME/Documents/$folder"
+    remote_path="$bucket/$folder/"
+
+    if [ ! -d "$local_path" ]; then
+        notify-send "S3 Sync" "Папка $folder отсутствует. Загрузка из облака..."
+        mkdir -p "$local_path"
+
+        aws s3 sync "$remote_path" "$local_path"
+    else
+        # 1. Отправляем локальные изменения (Last Write Wins)
+        aws s3 sync "$local_path" "$remote_path"
+        # 2. Забираем изменения из облака
+        aws s3 sync "$remote_path" "$local_path"
+    fi
+done
+
+notify-send "Синхронизация завершена"
