@@ -5,7 +5,7 @@
 
   "modules-left": ["hyprland/workspaces"],
   "modules-center": ["hyprland/language", "clock", "custom/amnezia"],
-    "modules-right": ["network", "battery", "power-profiles-daemon", "custom/sys-info"],
+    "modules-right": ["bluetooth", "network", "battery", "power-profiles-daemon", "custom/sys-info"],
 
   "hyprland/workspaces": {
 		"format": "{icon}",
@@ -32,6 +32,8 @@
     "format-en": "EN",
     "format-ru": "RU"
   },
+
+  "bluetooth": { "format": "", "on-click": "bluedevil-wizard" },
 
   "clock": {
     "format": "{:%H:%M}",

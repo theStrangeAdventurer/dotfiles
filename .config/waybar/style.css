@@ -5,22 +5,22 @@
 
 window#waybar {
 	padding: 0;
-	background: linear-gradient(119deg, rgba(4, 93, 107, 0.56) 0%, rgba(7, 23, 41, 0.43) 100%);
-	color: #cdd6f4;
-	-webkit-backdrop-filter: blur(10px);
+	background: rgba(45, 53, 59, 0.9);
+	color: #d3c6aa;
 }
 
 #workspaces button {
 	padding: 2px;
-	color: #fff;
+	color: #859289;
 }
 
 #workspaces button.active {
-	background-color: #3AABC2;
-	color: #1e1e2e;
+	background-color: #a7c080;
+	color: #2d353b;
 }
 
 #battery,
+#bluetooth,
 #power-profiles-daemon,
 #network,
 #custom-sys-info,
@@ -29,14 +29,14 @@ window#waybar {
 #network label,
 #custom-sys-info label {
 	padding: 0 6px;
-	font-size: 14px;
+	font-size: 13px;
+	color: #7fbbb3;
+	min-width: 24px;
+	margin: 2px 2px;
 }
-
-
-
 
 #clock,
 #language {
 	padding: 0 4px;
+	color: #dbbc7f;
 }
-

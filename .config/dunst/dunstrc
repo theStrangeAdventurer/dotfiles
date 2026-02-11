@@ -1,0 +1,34 @@
+[global]
+    # Геометрия и вид
+    width = 300
+    height = 300
+    offset = 20x20
+    origin = top-right
+    corner_radius = 8
+    frame_width = 2
+    padding = 10
+    horizontal_padding = 10
+    separator_height = 2
+    
+    # Шрифт
+    font = CaskaydiaCove Nerd Font Mono 12
+    
+    # Цвета рамок
+    frame_color = "#2D4F3F"
+    separator_color = frame
+
+[urgency_low]
+    background = "#1B2B24"
+    foreground = "#A7C080"
+    timeout = 5
+
+[urgency_normal]
+    background = "#23332E"
+    foreground = "#DBE5CC"
+    timeout = 10
+
+[urgency_critical]
+    background = "#3C2A2A"
+    foreground = "#E67E80"
+    frame_color = "#E67E80"
+    timeout = 0
