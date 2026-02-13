@@ -35,6 +35,7 @@ source $ZSH/oh-my-zsh.sh
 
 # User configuration
 export EDITOR=nvim
+export GTK_THEME=Adwaita:dark
 
 alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 ai() {
