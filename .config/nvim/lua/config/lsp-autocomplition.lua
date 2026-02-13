@@ -18,6 +18,8 @@ while true do
 		local config_status, config = pcall(dofile, config_path)
 		local lsp_name = parts[1];
 
+		local capabilities = vim.lsp.protocol.make_client_capabilities()
+
 		if config_status and config then
 			local patterns = vim.tbl_map(function(ext)
 				return '*.' .. ext
@@ -28,10 +30,12 @@ while true do
 					vim.lsp.enable(lsp_name);
 					vim.lsp.start(vim.tbl_extend('force', config, {
 						name = lsp_name,
+						capabilities = capabilities,
 						root_dir = vim.fs.root(ev.buf, config.root_markers or { 'package.json' })
 					}))
 				end,
 			});
+
 		else
 			vim.notify("Error loading LSP configuration: " .. lsp_name, vim.log.levels.ERROR)
 		end
@@ -54,18 +58,42 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 		-- Save current cursor position
 		local cursor_pos = vim.fn.getpos('.')
 
-		-- Run jq to format the entire buffer
-		vim.cmd([[%!jq '.']])
+		-- Run jq to format the entire buffer (suppressing stderr)
+		vim.cmd([[%!jq '.' 2>/dev/null]])
 
 		-- If jq returned an error (non-zero code), save without formatting
 		if vim.v.shell_error ~= 0 then
-			vim.notify("jq failed to format JSON: saving without changes", vim.log.levels.WARN)
+			vim.cmd([[undo]])
+			vim.notify("jq: ошибка форматирования JSON (проверьте синтаксис)", vim.log.levels.WARN)
 		end
 
 		-- Restore cursor position
 		vim.fn.setpos('.', cursor_pos)
 	end,
 	desc = "Format JSON files with jq before saving"
+})
+
+-- Adding python formatting using ruff
+vim.api.nvim_create_autocmd("BufWritePre", {
+	pattern = "*.py",
+	callback = function()
+		if vim.fn.executable("ruff") == 0 then
+			return
+		end
+
+		local cursor_pos = vim.fn.getpos('.')
+
+		-- Format buffer using ruff (reading from stdin, stderr to /dev/null)
+		vim.cmd([[%!ruff format - 2>/dev/null]])
+
+		if vim.v.shell_error ~= 0 then
+			vim.cmd([[undo]])
+			vim.notify("ruff: ошибка форматирования (проверьте синтаксис)", vim.log.levels.WARN)
+		end
+
+		vim.fn.setpos('.', cursor_pos)
+	end,
+	desc = "Format Python files with ruff before saving"
 })
 
 local function set_lsp_keymaps(args)
