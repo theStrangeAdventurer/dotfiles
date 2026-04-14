@@ -52,7 +52,6 @@ function check_is_non_writable()
 	local non_writable_buffers = {
 		[''] = true, -- empty buffer
 		['neo-tree'] = true,
-		['codecompanion'] = true,
 	}
 
 	return non_writable_buffers[vim.bo.filetype]
