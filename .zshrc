@@ -52,3 +52,4 @@ ai() {
 
 source /usr/share/fzf/key-bindings.zsh && source /usr/share/fzf/completion.zsh
 
+alias get_idf='. /opt/esp-idf/export.sh'
