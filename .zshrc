@@ -38,16 +38,36 @@ export EDITOR=nvim
 export GTK_THEME=Adwaita:dark
 
 alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
-ai() {
-  local os_name="$(uname -s)"
-	local distro=""
 
-	if [ "$os_name" = "Linux" ]; then
-		if [ -f /etc/os-release ]; then
-			distro=$(grep -oP '(?<=^ID=).+' /etc/os-release | tr -d '"')
-		fi
-	fi
-  aichat --no-stream --prompt "Answer briefly in the user's language. Give advice based on the user's operating system: $os_name $distro. Current working directory: $PWD. If the answer is straightforward and can be expressed in a single bash command, provide ONLY that command without any explanation or formatting." "$*"
+ai() {
+    local os_name="$(uname -s)"
+    local distro=""
+
+    if [ "$os_name" = "Linux" ]; then
+        if [ -f /etc/os-release ]; then
+            distro=$(grep -oP '(?<=^ID=).+' /etc/os-release | tr -d '"')
+        fi
+    fi
+
+    local show_flag=false
+    local args=()
+
+    # Проходим по всем аргументам
+    for arg in "$@"; do
+        if [ "$arg" = "--show" ]; then
+            show_flag=true
+        else
+            args+=("$arg")
+        fi
+    done
+
+    # Если флаг был, выводим первый из оставшихся аргументов
+    if [ "$show_flag" = true ]; then
+        echo "${args[0]}"
+    fi
+
+    # Передаем массив аргументов без --show в aichat
+    aichat --no-stream --prompt "Answer briefly in the user's language. Give advice based on the user's operating system: $os_name $distro. Current working directory: $PWD. If the answer is straightforward and can be expressed in a single bash command, provide ONLY that command without any explanation or formatting." "${args[@]}"
 }
 
 source /usr/share/fzf/key-bindings.zsh && source /usr/share/fzf/completion.zsh
