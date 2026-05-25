@@ -1,6 +1,6 @@
 * {
 	font-family: "CaskaydiaCove Nerd Font Mono", monospace;
-	font-size: 13px;
+	font-size: 12px;
 }
 
 window#waybar {
@@ -9,34 +9,73 @@ window#waybar {
 	color: #d3c6aa;
 }
 
+/* ── Workspaces ─────────────────────────────────── */
+
 #workspaces button {
-	padding: 2px;
+	margin: 2px;
+	padding: 2px 4px;
 	color: #859289;
+	border: none;
+	border-radius: 0;
+}
+
+#workspaces button:hover {
+	background: rgba(167, 192, 128, 0.2);
+	border: none;
+	border-radius: 0;
+	box-shadow: none;
 }
 
 #workspaces button.active {
 	background-color: #a7c080;
 	color: #2d353b;
+	border: none;
+	border-radius: 0;
 }
 
-#battery,
-#bluetooth,
-#power-profiles-daemon,
-#network,
-#custom-sys-info,
-#battery label,
-#power-profiles-daemon label,
-#network label,
-#custom-sys-info label {
-	padding: 0 6px;
-	font-size: 13px;
-	color: #7fbbb3;
-	min-width: 24px;
-	margin: 2px 2px;
+#workspaces button:hover {
+	background: rgba(167, 192, 128, 0.2);
+	border-radius: 0;
+	box-shadow: none;
 }
 
+#workspaces button.active {
+	background-color: #a7c080;
+	color: #2d353b;
+	border-radius: 0;
+}
+
+/* ── Center modules ────────────────────────────── */
+
+#idle_inhibitor,
 #clock,
-#language {
-	padding: 0 4px;
+#language,
+#custom-amnezia {
+	padding: 0 6px;
 	color: #dbbc7f;
+}
+
+/* ── Right modules ─────────────────────────────── */
+
+#custom-hyprwhspr,
+#bluetooth,
+#network,
+#battery,
+#power-profiles-daemon,
+#custom-sys-info {
+	padding: 0 10px;
+	color: #7fbbb3;
+	font-size: 12px;
+}
+
+#custom-hyprwhspr.ready {
+	color: #7fbbb3;
+	border-color: transparent;
+}
+
+#custom-hyprwhspr.recording {
+	color: #E75143;
+	border-bottom-color: #E75143;
+	font-family: monospace;
+	letter-spacing: 0.5px;
 }
