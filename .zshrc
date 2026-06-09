@@ -1,7 +1,20 @@
 export ZSH="$HOME/.oh-my-zsh"
 
-# Base PATH
-export PATH="$PATH:$HOME/.local/bin"
+if [ -d "/opt/homebrew" ]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+fi
+
+if [ -d "/opt/homebrew/opt/llvm/bin" ]; then
+    export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
+fi
+
+if [ -d "$HOME/.local/bin" ]; then
+    export PATH="$HOME/.local/bin:$PATH"
+fi
+
+if [ -f "$HOME/.local/bin/mise" ]; then
+	eval "$("$HOME/.local/bin/mise" activate zsh)"
+fi
 
 # Flutter and Android configuration (conditional)
 if (( $+commands[flutter] )) || [ -d "$HOME/.flutter/bin" ]; then
@@ -25,51 +38,43 @@ if [ -z "${SSH_AUTH_SOCK}" ];then
 	eval "$(ssh-agent -s)" > /dev/null
 fi
 
-# See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-ZSH_THEME="intheloop"
-
-plugins=(git zsh-autosuggestions fast-syntax-highlighting zsh-autocomplete)
-
-source /usr/share/nvm/init-nvm.sh
-source $ZSH/oh-my-zsh.sh
+if [ -f "/usr/share/nvm/init-nvm.sh" ]; then
+	source "/usr/share/nvm/init-nvm.sh"
+fi
 
 # User configuration
 export EDITOR=nvim
-export GTK_THEME=Adwaita:dark
+export TERMINAL=wezterm
 
 alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
-
-ai() {
-    local os_name="$(uname -s)"
-    local distro=""
-
-    if [ "$os_name" = "Linux" ]; then
-        if [ -f /etc/os-release ]; then
-            distro=$(grep -oP '(?<=^ID=).+' /etc/os-release | tr -d '"')
-        fi
-    fi
-
-    local show_flag=false
-    local args=()
-
-    # Проходим по всем аргументам
-    for arg in "$@"; do
-        if [ "$arg" = "--show" ]; then
-            show_flag=true
-        else
-            args+=("$arg")
-        fi
-    done
-
-    # Если флаг был, выводим первый из оставшихся аргументов
-    if [ "$show_flag" = true ]; then
-        echo "${args[0]}"
-    fi
-
-    # Передаем массив аргументов без --show в aichat
-    aichat --no-stream --prompt "Answer briefly in the user's language. Give advice based on the user's operating system: $os_name $distro. Current working directory: $PWD. If the answer is straightforward and can be expressed in a single bash command, provide ONLY that command without any explanation or formatting." "${args[@]}"
-}
-
-source /usr/share/fzf/key-bindings.zsh && source /usr/share/fzf/completion.zsh
-
 alias get_idf='. /opt/esp-idf/export.sh'
+
+# >>> ZINIT AUTO CONFIG START >>>
+# Проверяем, установлен ли Zinit, прежде чем что-то запускать
+ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
+
+if [ -f "${ZINIT_HOME}/zinit.zsh" ]; then
+    # Источник Zinit
+    source "${ZINIT_HOME}/zinit.zsh"
+
+    # Автодополнение для команды zinit
+    autoload -Uz _zinit
+    (( ${+_comps} )) && _comps[zinit]=_zinit
+
+    # ==============================================================================
+    # ПЛАГИНЫ
+    # ==============================================================================
+    zinit light zsh-users/zsh-autosuggestions
+    zinit light zdharma-continuum/fast-syntax-highlighting
+    zinit light zdharma-continuum/history-search-multi-word
+
+    # Оптимальный compinit с cdreplay
+    autoload -Uz compinit
+    compinit
+    zinit cdreplay -q
+else
+    # Если Zinit пропал, просто дефолтный compinit
+    autoload -Uz compinit
+    compinit
+fi
+# <<< ZINIT AUTO CONFIG END <<<

@@ -1,0 +1,89 @@
+#!/usr/bin/env bash
+
+# Цвета для вывода
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+YELLOW='\033[1;33m'
+RED='\033[0;31m'
+NC='\033[0m'
+
+ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
+ZSHRC="${HOME}/.zshrc"
+
+echo -e "${BLUE}==> Шаг 1: Проверяем наличие Zinit на диске...${NC}"
+
+if [ ! -d "$ZINIT_HOME/.git" ]; then
+    echo -e "${YELLOW}==> Папка Zinit не найдена. Начинаем установку...${NC}"
+    if [ -d "$ZINIT_HOME" ]; then
+        rm -rf "$ZINIT_HOME"
+    fi
+    mkdir -p "$(dirname "$ZINIT_HOME")"
+    if git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"; then
+        echo -e "${GREEN}==> Zinit успешно склонирован.${NC}"
+    else
+        echo -e "${RED}==> Ошибка: Не удалось склонировать репозиторий.${NC}"
+        exit 1
+    fi
+else
+    echo -e "${GREEN}==> Найдена существующая установка Zinit. Пропускаем клонирование.${NC}"
+fi
+
+echo -e "${BLUE}==> Шаг 2: Модифицируем файл $ZSHRC...${NC}"
+
+START_MARKER="# >>> ZINIT AUTO CONFIG START >>>"
+END_MARKER="# <<< ZINIT AUTO CONFIG END <<<"
+
+# Генерируем чистый текст конфига
+ZINIT_CONFIG=$(cat << 'EOF'
+# >>> ZINIT AUTO CONFIG START >>>
+# Проверяем, установлен ли Zinit, прежде чем что-то запускать
+ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
+
+if [ -f "${ZINIT_HOME}/zinit.zsh" ]; then
+    # Источник Zinit
+    source "${ZINIT_HOME}/zinit.zsh"
+
+    # Автодополнение для команды zinit
+    autoload -Uz _zinit
+    (( ${+_comps} )) && _comps[zinit]=_zinit
+
+    # ==============================================================================
+    # ПЛАГИНЫ
+    # ==============================================================================
+    zinit light zsh-users/zsh-autosuggestions
+    zinit light zdharma-continuum/fast-syntax-highlighting
+    zinit light zdharma-continuum/history-search-multi-word
+
+    # Оптимальный compinit с cdreplay
+    autoload -Uz compinit
+    compinit
+    zinit cdreplay -q
+else
+    # Если Zinit пропал, просто дефолтный compinit
+    autoload -Uz compinit
+    compinit
+fi
+# <<< ZINIT AUTO CONFIG END <<<
+EOF
+)
+
+# Очищаем временный файл, если он остался
+TMP_ZSHRC=$(mktemp)
+
+if [ ! -f "$ZSHRC" ]; then
+    touch "$ZSHRC"
+fi
+
+if grep -q "$START_MARKER" "$ZSHRC"; then
+    echo -e "${YELLOW}==> Блок Zinit уже есть в $ZSHRC. Перезаписываем его...${NC}"
+    sed "/$START_MARKER/,/$END_MARKER/d" "$ZSHRC" > "$TMP_ZSHRC"
+    echo "$ZINIT_CONFIG" >> "$TMP_ZSHRC"
+    mv "$TMP_ZSHRC" "$ZSHRC"
+else
+    echo -e "${YELLOW}==> Добавляем блок Zinit в конец $ZSHRC...${NC}"
+    echo -e "\n$ZINIT_CONFIG" >> "$ZSHRC"
+fi
+
+rm -f "$TMP_ZSHRC"
+
+echo -e "${GREEN}==> Всё! Проверяй файл: cat $ZSHRC${NC}"
